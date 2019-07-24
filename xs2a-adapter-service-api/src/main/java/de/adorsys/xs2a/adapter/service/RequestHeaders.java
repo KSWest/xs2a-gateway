@@ -4,6 +4,7 @@ import de.adorsys.xs2a.adapter.service.exception.BicNotProvidedException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class RequestHeaders {
     public static final String X_GTW_BIC = "X-GTW-BIC";
@@ -32,7 +33,7 @@ public class RequestHeaders {
     private static final String PSU_DEVICE_ID = "PSU-Device-ID";
     private static final String PSU_GEO_LOCATION = "PSU-Geo-Location";
     // technical
-    private static final String ACCEPT = "Accept";
+    public static final String ACCEPT = "Accept";
     private static final String AUTHORIZATION = "Authorization";
 
     private static Map<String, String> headerNamesLowerCased = new HashMap<>();
@@ -88,7 +89,9 @@ public class RequestHeaders {
     }
 
     public boolean isAcceptJson() {
-        return "application/json".equalsIgnoreCase(headers.get(ACCEPT));
+        return Optional.ofNullable(headers.get(ACCEPT))
+                   .map(a -> a.toLowerCase().startsWith("application/json"))
+                   .orElse(false);
     }
 
     public String removeBic() {
